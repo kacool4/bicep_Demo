@@ -3,7 +3,8 @@ param virtualNetworks_AZEUW_NETBEN01_name string = 'AZEUW-NETBEN01'
 
 param location string = 'westeurope'
 
-
+param SSLCertBase64String string = ''
+param SSLCertDisplayName string = 'Wildcard_mtugocom_2022'
 
 
 module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
@@ -37,6 +38,8 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
 
 
     applicationgateway_properties_trustedRootCertificates: []
+
+    
     applicationgateway_properties_frontendIPConfigurations: [
       {
         name: 'publicfrontendip'
