@@ -1,4 +1,4 @@
-param applicationGateways_azeuw_agwt02_name string = 'azeuw-agwt02'
+param applicationGateways_azeuw_agwt02_name string = 'azeuww-agwt02'
 param virtualNetworks_AZEUW_NETBEN01_name string = 'AZEUW-NETBEN01'
 
 param location string = 'westeurope'
