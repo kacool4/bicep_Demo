@@ -16,7 +16,6 @@ param applicationgateway_properties_redirectConfigurations array = []
 param applicationgateway_properties_sslPolicy object = {}
 param applicationgateway_properties_webApplicationFirewallConfiguration object = {}
 param applicationgateway_properties_forceFirewallPolicyAssociation bool = true
-param applicationgateway_properties_firewallPolicy object = {}
 param applicationgateway_properties_autoscaleConfiguration object = {}
 param tags object = {}
 
@@ -48,7 +47,6 @@ resource applicationgateway 'Microsoft.Network/applicationGateways@2020-11-01' =
     sslPolicy: applicationgateway_properties_sslPolicy
     webApplicationFirewallConfiguration: applicationgateway_properties_webApplicationFirewallConfiguration
     forceFirewallPolicyAssociation: applicationgateway_properties_forceFirewallPolicyAssociation
-    firewallPolicy: applicationgateway_properties_firewallPolicy
     autoscaleConfiguration: applicationgateway_properties_autoscaleConfiguration
   }
 }

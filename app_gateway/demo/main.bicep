@@ -1,13 +1,38 @@
 param applicationGateways_azeuw_agwt02_name string = 'azeuw-agwt02'
-param virtualNetworks_AZEUW_NETBEN01_name string = 'AZEUW-NETBEN01'
+param virtualNetworks_AZEUW_NETBEN01_name string = 'morpheus-vnet'
 
 param location string = 'westeurope'
 
 param SSLCertBase64String string = ''
-param SSLCertDisplayName string = 'Demo_Cert'
+param SSLCertDisplayName string = 'DemoCert'
 
 
-module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
+module publicipaddress_azeuw_pipagwt02 '../Module/publicipaddress/main.bicep' = {
+  name: 'publicipaddress_azeuw_pipagwt02'
+      params: {
+        location: location
+        name_publicipaddress: 'dimidemotest'
+        //tags: resourcetags
+        publicipaddress_sku: {
+          name: 'Standard'
+          tier: 'Regional'
+        }
+        publicipaddress_properties: {
+          publicIPAddressVersion: 'IPv4'
+          publicIPAllocationMethod: 'Static'
+          idleTimeoutInMinutes: 4
+          dnsSettings: {
+            domainNameLabel: 'dimidemont'
+            fqdn: 'dimidemonewtest.westeurope.cloudapp.azure.com'
+          }
+          ipTags: []
+        }
+      }
+    }
+
+
+
+module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
   name: 'applicationgateway_azeuw_agwt02'
   params:{
     location: location
@@ -18,24 +43,25 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
       tier: 'WAF_v2'
     }
 
+  
 
     applicationgateway_properties_gatewayIPConfigurations: [
       {
         name: 'ipconfig'
         properties: {
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworks_AZEUW_NETBEN01_name,'azeuw-sntagwt02')
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworks_AZEUW_NETBEN01_name,'appgw')
           }
         }
       }
     ]
 
     
-    applicationgateway_properties_sslCertificates: [
+     applicationgateway_properties_sslCertificates: [
       {
         name: SSLCertDisplayName
         properties: {
-          data: SSLCertBase64String
+          keyVaultSecretId: SSLCertBase64String
         }
       }
     ]
@@ -57,7 +83,7 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
     ]
 
 
-    applicationgateway_properties_frontendPorts: [
+   applicationgateway_properties_frontendPorts: [
       {
         name: 'frontendportssl'
         properties: {
@@ -73,7 +99,7 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
     ]
 
 
-    applicationgateway_properties_backendAddressPools: [
+   applicationgateway_properties_backendAddressPools: [
       {
         name: 'hive-hivegatewaysignalrdev-backendpool'
         properties: {
@@ -87,7 +113,7 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
     ]
 
 
-    applicationgateway_properties_backendHttpSettingsCollection: [
+  /*    applicationgateway_properties_backendHttpSettingsCollection: [
       {
         name: 'hive-admindev-backendhttpsettings'
         properties: {
@@ -116,7 +142,7 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
           }
           protocol: 'Https'
           sslCertificate: {
-            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/sslCertificates/Wildcard_mtugocom_2022'
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/sslCertificates/Demo_Cert'
           }
           hostName: 'admin2-dev.mtu-go.com'
           hostNames: []
@@ -247,12 +273,11 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
     }
     applicationgateway_properties_forceFirewallPolicyAssociation: true
     
-    applicationgateway_properties_firewallPolicy: {
-      id: appgatewaydependancies.outputs.webapplicationfirewallpolicies_azeuwagwcustompolicydefault_id
-    }
+ 
     applicationgateway_properties_autoscaleConfiguration: {
       minCapacity: 0
       maxCapacity: 2
-    }
+    }*/
   }
 }
+ 
