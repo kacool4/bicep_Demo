@@ -17,6 +17,8 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
       name: 'WAF_v2'
       tier: 'WAF_v2'
     }
+
+
     applicationgateway_properties_gatewayIPConfigurations: [
       {
         name: 'ipconfig'
@@ -27,6 +29,8 @@ module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
         }
       }
     ]
+
+    
     applicationgateway_properties_sslCertificates: [
       {
         name: SSLCertDisplayName
