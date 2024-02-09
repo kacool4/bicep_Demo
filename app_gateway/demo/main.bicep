@@ -4,7 +4,7 @@ param virtualNetworks_AZEUW_NETBEN01_name string = 'AZEUW-NETBEN01'
 param location string = 'westeurope'
 
 param SSLCertBase64String string = ''
-param SSLCertDisplayName string = 'Wildcard_mtugocom_2022'
+param SSLCertDisplayName string = 'Demo_Cert'
 
 
 module applicationgateway_azeuw_agwt02 '../Module/main.bicep' = {
