@@ -50,7 +50,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
         name: 'ipconfig'
         properties: {
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworks_AZEUW_NETBEN01_name,'appgw')
+            id: '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourceGroups/daniel-test-rg/providers/Microsoft.Network/virtualNetworks/morpheus-vnet/subnets/appgw'
           }
         }
       }
@@ -68,7 +68,9 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
 
     applicationgateway_properties_identity:{
         type: 'UserAssigned'
-        userAssignedIdentities: '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/daniel-test-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mi-appgw-dimi'
+        userAssignedIdentities: {
+          '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/daniel-test-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mi-appgw-dimi':{}
+        }
       }
   
 
@@ -119,7 +121,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
     ]
 
 
-  /*    applicationgateway_properties_backendHttpSettingsCollection: [
+  /*   applicationgateway_properties_backendHttpSettingsCollection: [
       {
         name: 'hive-admindev-backendhttpsettings'
         properties: {
@@ -136,7 +138,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
     ]
 
 
-    applicationgateway_properties_httpListeners: [
+     applicationgateway_properties_httpListeners: [
       {
         name: 'hive-admindev-httpslistener'
         properties: {
