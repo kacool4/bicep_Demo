@@ -18,14 +18,16 @@ param applicationgateway_properties_webApplicationFirewallConfiguration object =
 param applicationgateway_properties_forceFirewallPolicyAssociation bool = true
 param applicationgateway_properties_autoscaleConfiguration object = {}
 param tags object = {}
+param applicationgateway_properties_identity object = {}
 
 @description('Azure Location')
 param location string = 'westeurope'
 
-resource applicationgateway 'Microsoft.Network/applicationGateways@2020-11-01' = {
+resource applicationgateway 'Microsoft.Network/applicationGateways@2023-04-01' = {
   name: name_applicationgateway
   location: location
   tags: tags
+  identity: applicationgateway_properties_identity
   properties: {
     sku: applicationgateway_properties_sku
     gatewayIPConfigurations: applicationgateway_properties_gatewayIPConfigurations

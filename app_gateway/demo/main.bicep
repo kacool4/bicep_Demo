@@ -61,10 +61,16 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
       {
         name: SSLCertDisplayName
         properties: {
-          keyVaultSecretId: SSLCertBase64String
+          keyVaultSecretId: 'https://dimi-appgw-test.vault.azure.net/secrets/dimi-test-appgw/8781522f2f3443eb9440abfbd68a6d2e'
         }
       }
     ]
+
+    applicationgateway_properties_identity:{
+        type: 'UserAssigned'
+        userAssignedIdentities: '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/daniel-test-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mi-appgw-dimi'
+      }
+  
 
 
     applicationgateway_properties_trustedRootCertificates: []
