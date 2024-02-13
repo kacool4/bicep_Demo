@@ -1,9 +1,9 @@
 param applicationGateways_azeuw_agwt02_name string = 'azeuw-agwt02'
-param virtualNetworks_AZEUW_NETBEN01_name string = 'morpheus-vnet'
+param virtualNetworks_AZEUW_NETBEN01_name string = '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/daniel-test-rg/providers/Microsoft.Network/virtualNetworks/morpheus-vnet-weu/subnets/appgw'
 
 param location string = 'westeurope'
 
-param SSLCertBase64String string = ''
+// param SSLCertBase64String string = ''
 param SSLCertDisplayName string = 'democert'
 
 
@@ -50,7 +50,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
         name: 'ipconfig'
         properties: {
           subnet: {
-            id: '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/daniel-test-rg/providers/Microsoft.Network/virtualNetworks/morpheus-vnet-weu/subnets/appgw'
+            id: virtualNetworks_AZEUW_NETBEN01_name 
           }
         }
       }
@@ -268,28 +268,6 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
                   }
                   {
                     headerName: 'X-Powered-By'
-                  }
-                ]
-              }
-            }
-            {
-              ruleSequence: 101
-              conditions: []
-              name: 'SetSecurityHeaders'
-              actionSet: {
-                requestHeaderConfigurations: []
-                responseHeaderConfigurations: [
-                  {
-                    headerName: 'Strict-Transport-Security'
-                    headerValue: '31536000'
-                  }
-                  {
-                    headerName: 'X-XSS-Protection'
-                    headerValue: '1'
-                  }
-                  {
-                    headerName: 'X-Content-Security-Policy'
-                    headerValue: 'nonsniff'
                   }
                 ]
               }
