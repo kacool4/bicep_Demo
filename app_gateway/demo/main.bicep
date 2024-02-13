@@ -4,7 +4,7 @@ param virtualNetworks_AZEUW_NETBEN01_name string = 'morpheus-vnet'
 param location string = 'westeurope'
 
 param SSLCertBase64String string = ''
-param SSLCertDisplayName string = 'DemoCert'
+param SSLCertDisplayName string = 'democert'
 
 
 module publicipaddress_azeuw_pipagwt02 '../Module/publicipaddress/main.bicep' = {
@@ -50,7 +50,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
         name: 'ipconfig'
         properties: {
           subnet: {
-            id: '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourceGroups/daniel-test-rg/providers/Microsoft.Network/virtualNetworks/morpheus-vnet/subnets/appgw'
+            id: '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/daniel-test-rg/providers/Microsoft.Network/virtualNetworks/morpheus-vnet-weu/subnets/appgw'
           }
         }
       }
@@ -121,7 +121,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
     ]
 
 
-  /*   applicationgateway_properties_backendHttpSettingsCollection: [
+     applicationgateway_properties_backendHttpSettingsCollection: [
       {
         name: 'hive-admindev-backendhttpsettings'
         properties: {
@@ -138,7 +138,26 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
     ]
 
 
-     applicationgateway_properties_httpListeners: [
+    applicationgateway_properties_httpListeners: [
+      {
+        name: 'hive-admindev-httplistener'
+        properties: {
+          frontendIPConfiguration: {
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/frontendIPConfigurations/publicfrontendip'
+          }
+          frontendPort: {
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/frontendPorts/frontendport'
+          }
+          protocol: 'Http'
+          sslCertificate: {
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/sslCertificates/democert'
+          }
+          hostName: 'dimi.test.com'
+          hostNames: []
+          requireServerNameIndication: false
+        }
+      }
+
       {
         name: 'hive-admindev-httpslistener'
         properties: {
@@ -150,9 +169,9 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
           }
           protocol: 'Https'
           sslCertificate: {
-            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/sslCertificates/Demo_Cert'
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/sslCertificates/democert'
           }
-          hostName: 'admin2-dev.mtu-go.com'
+          hostName: 'dimi.test.com'
           hostNames: []
           requireServerNameIndication: true
         }
@@ -160,15 +179,15 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
     ]
 
 
-    applicationgateway_properties_urlPathMaps: [
+     applicationgateway_properties_urlPathMaps: [
       {
         name: 'hive-hivegatewaydev-urlpathmap'
         properties: {
           defaultBackendAddressPool: {
-            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/backendAddressPools/hive-hivegatewaydev-backendpool'
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/backendAddressPools/hive-hivegatewaysignalrdev-backendpool'
           }
           defaultBackendHttpSettings: {
-            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/backendHttpSettingsCollection/hive-hivegatewaydev-backendhttpsettings'
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/backendHttpSettingsCollection/hive-admindev-backendhttpsettings'
           }
           pathRules: [
             {
@@ -181,7 +200,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
                   id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/backendAddressPools/hive-hivegatewaysignalrdev-backendpool'
                 }
                 backendHttpSettings: {
-                  id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/backendHttpSettingsCollection/hive-hivegatewaysignalrdev-backendhttpsettings'
+                  id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/backendHttpSettingsCollection/hive-admindev-backendhttpsettings'
                 }
                 rewriteRuleSet: {
                   id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/rewriteRuleSets/rewriterule-all'
@@ -194,16 +213,20 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
       
     ]
     
+
     applicationgateway_properties_requestRoutingRules: [
       {
-        name: 'hive-hivegatewaydev-routingrule'
+        name: 'hive-admindev-redirectrule'
         properties: {
-          ruleType: 'PathBasedRouting'
+          ruleType: 'Basic'
           httpListener: {
-            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/httpListeners/hive-hivegatewaydev-httpslistener'
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/httpListeners/hive-admindev-httplistener'
           }
-          urlPathMap: {
-            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/urlPathMaps/hive-hivegatewaydev-urlpathmap'
+          redirectConfiguration: {
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/redirectConfigurations/hive-admindev-redirectconfiguration'
+          }
+          rewriteRuleSet: {
+            id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/rewriteRuleSets/rewriterule-all'
           }
         }
       }
@@ -215,7 +238,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
         name: 'hive-admindev-probe'
         properties: {
           protocol: 'Http'
-          host: '10.96.134.62'
+          host: '10.96.14.62'
           path: '/'
           interval: 30
           timeout: 10
@@ -229,10 +252,55 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
 
     
     applicationgateway_properties_rewriteRuleSets: [
-      {}
+      {
+        name: 'rewriterule-all'
+        properties: {
+          rewriteRules: [
+            {
+              ruleSequence: 100
+              conditions: []
+              name: 'DeleteServerBanner'
+              actionSet: {
+                requestHeaderConfigurations: []
+                responseHeaderConfigurations: [
+                  {
+                    headerName: 'Server'
+                  }
+                  {
+                    headerName: 'X-Powered-By'
+                  }
+                ]
+              }
+            }
+            {
+              ruleSequence: 101
+              conditions: []
+              name: 'SetSecurityHeaders'
+              actionSet: {
+                requestHeaderConfigurations: []
+                responseHeaderConfigurations: [
+                  {
+                    headerName: 'Strict-Transport-Security'
+                    headerValue: '31536000'
+                  }
+                  {
+                    headerName: 'X-XSS-Protection'
+                    headerValue: '1'
+                  }
+                  {
+                    headerName: 'X-Content-Security-Policy'
+                    headerValue: 'nonsniff'
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
     ]
 
 
+ 
 
     applicationgateway_properties_redirectConfigurations: [
       {
@@ -251,7 +319,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
       }
     ]
 
-    
+   /*   
     applicationgateway_properties_sslPolicy: {
       policyType: 'Custom'
       minProtocolVersion: 'TLSv1_2'

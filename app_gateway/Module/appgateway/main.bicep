@@ -23,7 +23,7 @@ param applicationgateway_properties_identity object = {}
 @description('Azure Location')
 param location string = 'westeurope'
 
-resource applicationgateway 'Microsoft.Network/applicationGateways@2023-04-01' = {
+resource applicationgateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
   name: name_applicationgateway
   location: location
   tags: tags
