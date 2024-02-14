@@ -20,6 +20,10 @@ param applicationgateway_properties_autoscaleConfiguration object = {}
 param tags object = {}
 param applicationgateway_properties_identity object = {}
 
+param ManagedIdentity_name string
+param ManagedIdentity_location string
+
+
 @description('Azure Location')
 param location string = 'westeurope'
 
@@ -53,4 +57,27 @@ resource applicationgateway 'Microsoft.Network/applicationGateways@2021-08-01' =
   }
 }
 
-output id string = applicationgateway.id
+resource ManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: ManagedIdentity_name
+  location: ManagedIdentity_location
+}
+
+resource AccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {
+  name: 'dimi-appgw-test/add'
+  properties: {
+    accessPolicies: [
+      {
+        objectId: ManagedIdentity.properties.principalId
+        permissions: {
+          certificates: [
+            'get','list'
+          ]
+          secrets: [
+            'get','list'
+          ]
+        }
+        tenantId: '0010a289-cf71-4b3e-ae52-5f9978f05439' 
+      }
+    ]
+  }
+}

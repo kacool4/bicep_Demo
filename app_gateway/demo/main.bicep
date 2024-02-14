@@ -1,8 +1,8 @@
 param applicationGateways_azeuw_agwt02_name string = 'azeuw-agwt02'
 param virtualNetworks_AZEUW_NETBEN01_name string = '/subscriptions/357794df-05ee-4428-a315-7c313103cefa/resourcegroups/daniel-test-rg/providers/Microsoft.Network/virtualNetworks/morpheus-vnet-weu/subnets/appgw'
-
+param keyvaultinfo string = 'https://dimi-appgw-test.vault.azure.net/secrets/dimi-test-appgw/8781522f2f3443eb9440abfbd68a6d2e'
 param location string = 'westeurope'
-
+param manageid string = 'manageidtest'
 // param SSLCertBase64String string = ''
 param SSLCertDisplayName string = 'democert'
 
@@ -34,7 +34,7 @@ module publicipaddress_azeuw_pipagwt02 '../Module/publicipaddress/main.bicep' = 
 
 module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
   name: 'applicationgateway_azeuw_agwt02'
-  params:{
+  params: {
     location: location
     name_applicationgateway: applicationGateways_azeuw_agwt02_name
     //tags: resourcetags
@@ -61,7 +61,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
       {
         name: SSLCertDisplayName
         properties: {
-          keyVaultSecretId: 'https://dimi-appgw-test.vault.azure.net/secrets/dimi-test-appgw/8781522f2f3443eb9440abfbd68a6d2e'
+          keyVaultSecretId: keyvaultinfo
         }
       }
     ]
@@ -219,6 +219,7 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
         name: 'hive-admindev-redirectrule'
         properties: {
           ruleType: 'Basic'
+          priority: 100
           httpListener: {
             id: '${resourceId('Microsoft.Network/applicationGateways',applicationGateways_azeuw_agwt02_name)}/httpListeners/hive-admindev-httplistener'
           }
@@ -296,6 +297,11 @@ module applicationgateway_azeuw_agwt02 '../Module/appgateway/main.bicep' = {
         }
       }
     ]
+
+    ManagedIdentity_name: manageid
+    ManagedIdentity_location: location
+    
+
 
    /*   
     applicationgateway_properties_sslPolicy: {
